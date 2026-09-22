@@ -78,6 +78,10 @@ Durante la generación se verificó automáticamente:
   `/auth/register` con datos inválidos (devuelve 400 con detalles por
   campo), y acceso sin token a `/tasks` (devuelve 401).
 
+Durante la realización de pruebas manuales:
+
+- 
+
 *(Tú debes añadir aquí: pruebas manuales contra una base de datos
 PostgreSQL real —registro, login, CRUD completo de tareas, intento de
 acceder a la tarea de otro usuario— y cualquier caso borde que hayas
@@ -93,4 +97,4 @@ probado tú mismo.)*
 (8 vulnerabilities (3 moderate, 3 high, 2 critical)),
 resuelto con `npm audit fix --force` (found 0 vulnerabilities)
 
-- 
+

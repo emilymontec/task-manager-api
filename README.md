@@ -62,13 +62,18 @@ Variables principales:
 
 ## Preparar la base de datos
 
-Ejecuta el script de migración incluido contra tu base de datos (por ejemplo con `psql`):
+Ejecuta el script de migración incluido contra tu base de datos:
 
 ```bash
-psql "$DATABASE_URL" -f migrations/001_init.sql
+npm run migrate
 ```
 
-Esto crea las tablas `users` y `tasks`, el enum `task_status` y los índices necesarios.
+Esto ejecutará `migrations/001_init.sql` usando Node.js + pg, creando:
+- Tabla `users` (id, name, email, password_hash, created_at, updated_at)
+- Enum `task_status` ('pendiente', 'en curso', 'completada')
+- Tabla `tasks` (id, titulo, descripcion, fecha_vencimiento, estado, user_id, created_at, updated_at)
+- Índices en `user_id`, `email` para queries rápidas
+
 
 ## Ejecutar el proyecto
 

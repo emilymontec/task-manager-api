@@ -8,22 +8,17 @@
     "build": "tsc -p tsconfig.json",
     "start": "node dist/server.js",
     "typecheck": "tsc --noEmit",
+    "migrate": "ts-node src/scripts/migrate.ts",
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "keywords": [
-    "express",
-    "typescript",
-    "postgresql",
-    "jwt",
-    "rest-api"
-  ],
+  "keywords": ["express", "typescript", "postgresql", "jwt", "rest-api"],
   "author": "",
   "license": "MIT",
   "dependencies": {
     "ajv": "^8.17.1",
     "ajv-formats": "^3.0.1",
-    "bcrypt": "^6.0.0",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
@@ -47,6 +42,6 @@
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.2",
-    "vitest": "^5.0.1"
+    "vitest": "^2.1.8"
   }
 }
