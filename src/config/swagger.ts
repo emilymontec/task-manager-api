@@ -2,6 +2,17 @@ import swaggerJSDoc from 'swagger-jsdoc';
 import path from 'path';
 import { env } from './env';
 
+/**
+ * Convierte una ruta con separadores del SO (p. ej. backslash en Windows)
+ * a forward-slash. La librería `glob` que usa swagger-jsdoc internamente
+ * espera patrones con '/', incluso en Windows: si se le pasa una ruta con
+ * '\', simplemente no encuentra coincidencias (falla en silencio, sin
+ * error) y el resultado es "No operations defined in spec!".
+ */
+function toPosixGlob(...segments: string[]): string {
+  return path.join(...segments).split(path.sep).join('/');
+}
+
 const options: swaggerJSDoc.Options = {
   definition: {
     openapi: '3.0.0',
@@ -15,7 +26,10 @@ const options: swaggerJSDoc.Options = {
     security: [{ bearerAuth: [] }],
   },
   // Rutas donde swagger-jsdoc buscará los bloques @openapi.
-  apis: [path.join(__dirname, '../api/routes/*.ts'), path.join(__dirname, '../api/routes/*.js')],
+  apis: [
+    toPosixGlob(__dirname, '../api/routes/*.ts'),
+    toPosixGlob(__dirname, '../api/routes/*.js'),
+  ],
 };
 
 export const swaggerSpec = swaggerJSDoc(options);

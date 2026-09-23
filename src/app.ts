@@ -15,7 +15,22 @@ import { env } from './config/env';
 export function createApp(): Application {
   const app = express();
 
-  app.use(helmet());
+  // helmet() por defecto bloquea scripts/estilos inline vía CSP, lo que deja
+  // Swagger UI en blanco (la página carga, pero su JS/CSS inline no se ejecuta).
+  // Se relaja únicamente script-src/style-src, manteniendo el resto de
+  // protecciones de helmet intactas.
+  app.use(
+    helmet({
+      contentSecurityPolicy: {
+        directives: {
+          ...helmet.contentSecurityPolicy.getDefaultDirectives(),
+          'script-src': ["'self'", "'unsafe-inline'"],
+          'style-src': ["'self'", "'unsafe-inline'"],
+          'img-src': ["'self'", 'data:'],
+        },
+      },
+    })
+  );
   app.use(cors());
   app.use(express.json());
   if (env.nodeEnv !== 'test') {

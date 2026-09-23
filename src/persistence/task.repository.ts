@@ -11,7 +11,7 @@ export const TaskRepository = {
   async create(userId: string, data: CreateTaskInput): Promise<Task> {
     const result = await query<Task>(
       `INSERT INTO tasks (titulo, descripcion, fecha_vencimiento, estado, user_id)
-       VALUES ($1, $2, $3, COALESCE($4, 'pendiente'), $5)
+       VALUES ($1, $2, $3, COALESCE($4::task_status, 'pendiente'::task_status), $5)
        RETURNING *`,
       [
         data.titulo,
@@ -49,7 +49,12 @@ export const TaskRepository = {
 
     for (const [key, value] of Object.entries(data)) {
       if (value !== undefined) {
-        fields.push(`${key} = $${index}`);
+        // `estado` es un enum en PostgreSQL: el driver `pg` envía los
+        // parámetros como texto, así que sin el cast explícito Postgres
+        // rechaza el UPDATE con "column is of type task_status but
+        // expression is of type text".
+        const cast = key === 'estado' ? '::task_status' : '';
+        fields.push(`${key} = $${index}${cast}`);
         values.push(value);
         index += 1;
       }

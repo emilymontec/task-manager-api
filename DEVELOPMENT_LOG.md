@@ -53,19 +53,10 @@ Administración de tareas personales
 cumpliendo arquitectura solicitada junto con la respeciva configuración
 
 
-- **Patrón repositorio** (`src/persistence/`): permite aislar el SQL en
-un solo   lugar por entidad, lo que facilita cambiar de motor de BD o
-testear los   servicios con mocks.
-- **Filtrado por `user_id` en cada query de tareas**, no solo en service:
-defensa en profundidad ante futuros descuidos en la capa de negocio.
-- **`asyncHandler`** envuelve controladores async: evita repetir `try/catch`
-en cada uno y garantiza que las promesas rechazadas lleguen al `errorHandler`.
-- **AJV con `JSONSchemaType<T>`**: los esquemas quedan ligados al tipo
-TypeScript de entrada, así un cambio en el tipo sin actualizar el esquema
-(o viceversa) produce un error de compilación.
-
 ### Qué se rechazó o modificó
 
+- **migración base de datos con psql**: posgres pesado para el equipo,
+se busco alternativa de migracion de base de datos con
 
 
 ### Verificación realizada
@@ -80,12 +71,9 @@ Durante la generación se verificó automáticamente:
 
 Durante la realización de pruebas manuales:
 
-- 
+- pruebas de endpoints en postman
+- pruebas de operaciones en swagger
 
-*(Tú debes añadir aquí: pruebas manuales contra una base de datos
-PostgreSQL real —registro, login, CRUD completo de tareas, intento de
-acceder a la tarea de otro usuario— y cualquier caso borde que hayas
-probado tú mismo.)*
 
 ### Decisiones tomadas sin asistencia de IA
 
@@ -97,4 +85,7 @@ probado tú mismo.)*
 (8 vulnerabilities (3 moderate, 3 high, 2 critical)),
 resuelto con `npm audit fix --force` (found 0 vulnerabilities)
 
+- no operaciones en swagger: incompatibilidad de backslash '\',
+se modifican a '/' ya que windows las necesita para que swagger
+detecte operaciones
 

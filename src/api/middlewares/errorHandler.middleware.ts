@@ -11,10 +11,31 @@ interface ErrorResponseBody {
 }
 
 /**
+ * Errores lanzados por `express.json()` (body-parser) cuando el cuerpo de
+ * la petición no es JSON válido. Vienen como SyntaxError pero ya traen su
+ * propio `status`/`statusCode` (400) y `type: 'entity.parse.failed'` —
+ * hay que reconocerlos explícitamente porque no son instancias de AppError.
+ */
+interface BodyParserSyntaxError extends SyntaxError {
+  status?: number;
+  statusCode?: number;
+  type?: string;
+  body?: string;
+}
+
+function isBodyParserJsonError(err: unknown): err is BodyParserSyntaxError {
+  return (
+    err instanceof SyntaxError &&
+    (err as BodyParserSyntaxError).type === 'entity.parse.failed'
+  );
+}
+
+/**
  * errorHandler
  * Middleware de error de Express (4 argumentos). Es el único lugar de la
  * aplicación que decide el formato de respuesta ante un error:
  * - AppError (y subclases): errores esperados de negocio -> su propio statusCode.
+ * - Errores de parseo de body-parser (JSON malformado): 400, mensaje claro.
  * - Cualquier otro error: se trata como 500 y no se filtran detalles internos
  *   al cliente (solo se exponen en modo development).
  */
@@ -26,11 +47,22 @@ export function errorHandler(
   _next: NextFunction
 ): void {
   const isAppError = err instanceof AppError;
-  const statusCode = isAppError ? err.statusCode : 500;
-  const message = isAppError ? err.message : 'Error interno del servidor';
+  const isJsonParseError = !isAppError && isBodyParserJsonError(err);
 
-  if (!isAppError) {
-    // Errores no controlados: se registran con el stack completo para depuración.
+  let statusCode = 500;
+  let message = 'Error interno del servidor';
+
+  if (isAppError) {
+    statusCode = err.statusCode;
+    message = err.message;
+  } else if (isJsonParseError) {
+    statusCode = 400;
+    message = 'El cuerpo de la petición no es JSON válido (revisa comas, comillas o llaves)';
+  }
+
+  const isHandledClientError = isAppError || isJsonParseError;
+  if (!isHandledClientError) {
+    // Errores no controlados (500 reales): se registran con el stack completo.
     console.error(`[Unhandled Error] ${req.method} ${req.originalUrl}:`, err);
   }
 
