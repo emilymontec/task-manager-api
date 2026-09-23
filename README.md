@@ -1,25 +1,25 @@
 # Task Manager API
 
-API RESTful para gestión de tareas personales, con registro, inicio de sesión y autenticación JWT. Construida con **Node.js**, **Express** y **TypeScript**, persistiendo en **PostgreSQL** (probado con servicio **NeonDB**).
+API RESTful para gestión de tareas personales, con registro, inicio de sesión y autenticación JWT. Construida con **Node.js**, **Express** y **TypeScript**, persistiendo en **PostgreSQL** (probado contra **NeonDB**).
 
 ## Arquitectura
 
-El proyecto está organizado en capas, cada una con responsabilidad única:
+El proyecto está organizado en capas, cada una con una responsabilidad única:
 
 ```
 src/
 ├── api/
-│   ├── routes/           # Definición de endpoints + documentación Swagger (JSDoc)
-│   └── middlewares/      # auth, validate, validateUuidParam, errorHandler
+│   ├── routes/         # Definición de endpoints + documentación Swagger (JSDoc)
+│   └── middlewares/     # auth, validate, validateUuidParam, errorHandler
 ├── controllers/          # Traducen HTTP <-> llamadas a servicios
 ├── services/             # Reglas de negocio (auth.service, task.service)
 ├── persistence/          # Única capa que conoce SQL (user.repository, task.repository)
 ├── schemas/              # Esquemas AJV/JSONSchema para validar entradas
-├── config/               # env (Singleton), database (pool pg), swagger
-├── types/                # Tipos de dominio compartidos
-├── utils/                # errors, jwt, password (bcrypt)
-├── app.ts                # Construye la app de Express (sin levantar el puerto)
-└── server.ts             # Punto de entrada: conecta a la BD y levanta el servidor
+├── config/                # env (Singleton), database (pool pg), swagger
+├── types/                 # Tipos de dominio compartidos
+├── utils/                 # errors, jwt, password (bcrypt)
+├── app.ts                 # Construye la app de Express (sin levantar el puerto)
+└── server.ts               # Punto de entrada: conecta a la BD y levanta el servidor
 ```
 
 **Flujo de una petición:** `routes` → `middlewares` (auth/validate) → `controller` → `service` (reglas de negocio) → `repository` (SQL) → `PostgreSQL`.
@@ -62,7 +62,7 @@ Variables principales:
 
 ## Preparar la base de datos
 
-Ejecuta el script de migración incluido contra tu base de datos:
+Ejecuta el script de migración incluido contra tu base de datos. **Sin necesidad de `psql`**:
 
 ```bash
 npm run migrate
@@ -74,6 +74,12 @@ Esto ejecutará `migrations/001_init.sql` usando Node.js + pg, creando:
 - Tabla `tasks` (id, titulo, descripcion, fecha_vencimiento, estado, user_id, created_at, updated_at)
 - Índices en `user_id`, `email` para queries rápidas
 
+**Alternativa (si usas NeonDB):**
+- Puedes ejecutar el SQL directamente desde la **web console de Neon**:
+  1. Abre tu proyecto en https://console.neon.tech
+  2. Navega a "SQL Editor"
+  3. Copia el contenido de `migrations/001_init.sql` y pégalo
+  4. Ejecuta
 
 ## Ejecutar el proyecto
 
