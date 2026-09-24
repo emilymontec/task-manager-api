@@ -156,11 +156,21 @@ Pruebas manuales propias:
 
 ### Decisiones tomadas sin asistencia de IA
 
-*(Pendiente: documenta aquí al menos dos decisiones que tomaste por tu
-cuenta, con tu razonamiento — por ejemplo: PostgreSQL local vs. NeonDB
-para desarrollo, si mantener `AuthorizationError` sin usar, si agregar
-paginación a `GET /tasks`, o cualquier otro ajuste que hayas decidido
-tú mismo al revisar el código.)*
+1. **NeonDB (PostgreSQL cloud) vs. PostgreSQL local**
+   Facilita el despliegue en Render, es gratis durante desarrollo, 
+   evita problemas OS-específicos y simula entorno de producción real.
+
+2. **Script Node.js para migraciones (sin psql)**
+   Evita instalación de dependencias pesadas, es multiplataforma, 
+   reutilizable en CI/CD, se convierte en auto-migrations en producción.
+
+3. **Aislar SQL en repositorios + filtrado doble por user_id**
+   Defiende en profundidad (seguridad), mantenibilidad, testabilidad y 
+   práctica estándar en fintech/healthtech.
+
+4. **404 en vez de 403 para tareas ajenas**
+   No revela información sobre recursos existentes, previene enumeración
+   de IDs.
 
 ## Retos y Soluciones
 
