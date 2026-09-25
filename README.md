@@ -10,16 +10,16 @@ El proyecto está organizado en capas, cada una con una responsabilidad única:
 src/
 ├── api/
 │   ├── routes/         # Definición de endpoints + documentación Swagger (JSDoc)
-│   └── middlewares/     # auth, validate, validateUuidParam, errorHandler
-├── controllers/          # Traducen HTTP <-> llamadas a servicios
-├── services/             # Reglas de negocio (auth.service, task.service)
-├── persistence/          # Única capa que conoce SQL (user.repository, task.repository)
-├── schemas/              # Esquemas AJV/JSONSchema para validar entradas
-├── config/                # env (Singleton), database (pool pg), swagger
-├── types/                 # Tipos de dominio compartidos
-├── utils/                 # errors, jwt, password (bcrypt)
-├── app.ts                 # Construye la app de Express (sin levantar el puerto)
-└── server.ts               # Punto de entrada: conecta a la BD y levanta el servidor
+│   └── middlewares/    # auth, validate, validateUuidParam, errorHandler
+├── controllers/        # Traducen HTTP <-> llamadas a servicios
+├── services/           # Reglas de negocio (auth.service, task.service)
+├── persistence/        # Única capa que conoce SQL (user.repository, task.repository)
+├── schemas/            # Esquemas AJV/JSONSchema para validar entradas
+├── config/             # env (Singleton), database (pool pg), swagger
+├── types/              # Tipos de dominio compartidos
+├── utils/              # errors, jwt, password (bcrypt)
+├── app.ts              # Construye la app de Express (sin levantar el puerto)
+└── server.ts           # Punto de entrada: conecta a la BD y levanta el servidor
 ```
 
 **Flujo de una petición:** `routes` → `middlewares` (auth/validate) → `controller` → `service` (reglas de negocio) → `repository` (SQL) → `PostgreSQL`.
@@ -173,4 +173,4 @@ Cualquier error no controlado se responde como `500`, sin exponer detalles inter
 
 ## Deseables no implementados
 
-Pruebas automatizadas y despliegue quedaron fuera del alcance de esta entrega por el plazo disponible; ver `DEVELOPMENT_LOG.md` para más detalle.
+Las pruebas automatizadas quedo fuera del alcance de esta entrega por el plazo disponible; ver `DEVELOPMENT_LOG.md` para más detalle.

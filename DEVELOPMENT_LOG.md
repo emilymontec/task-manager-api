@@ -156,19 +156,19 @@ Pruebas manuales propias:
 
 ### Decisiones tomadas sin asistencia de IA
 
-1. **NeonDB (PostgreSQL cloud) vs. PostgreSQL local**
+1. **NeonDB (PostgreSQL cloud) vs. PostgreSQL local**:
    Facilita el despliegue en Render, es gratis durante desarrollo, 
    evita problemas OS-específicos y simula entorno de producción real.
 
-2. **Script Node.js para migraciones (sin psql)**
+2. **Script Node.js para migraciones (sin psql)**:
    Evita instalación de dependencias pesadas, es multiplataforma, 
    reutilizable en CI/CD, se convierte en auto-migrations en producción.
 
-3. **Aislar SQL en repositorios + filtrado doble por user_id**
+3. **Aislar SQL en repositorios + filtrado doble por user_id**:
    Defiende en profundidad (seguridad), mantenibilidad, testabilidad y 
    práctica estándar en fintech/healthtech.
 
-4. **404 en vez de 403 para tareas ajenas**
+4. **404 en vez de 403 para tareas ajenas**:
    No revela información sobre recursos existentes, previene enumeración
    de IDs.
 
